@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import './index.css'
 import * as yup from 'yup'
 import axios from 'axios'
-import { useState } from 'react'
+import { useReducer, useState } from 'react'
 
 const schema = yup.object({
   userInput: yup
@@ -12,6 +12,20 @@ const schema = yup.object({
     .required('El mensaje es obligatorio')
 })
 
+const initialState = {
+  messages: []
+}
+
+const chatReducer = (state, action) => {
+  switch (action.type) {
+    case 'Add_MESSAGE':
+      console.log('agregando mensaje . . .')
+      console.log(state)
+      return { ...state, messages: [...state.messages, action.payload] }
+    default:
+      return state
+  }
+}
 export const App = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
@@ -19,6 +33,7 @@ export const App = () => {
   // Guarda la respuesta de llama2
   const [response, setResponse] = useState('')
   const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(chatReducer, initialState)
 
   const handlePregunta = async (data) => {
     console.log(data)
@@ -30,6 +45,9 @@ export const App = () => {
         stream: false
       })
       setResponse(res.data.response)
+      // Dispatch para guardar el mensaje del ususario
+      dispatch({ type: 'ADD_MESSAGE', payload: { from: 'user', text: data.userInput } })
+      dispatch({ type: 'ADD_MESSAGE', payload: { from: 'bot', text: res.data.response } })
     } catch (error) {
       console.error('error: ', error)
     } finally {
@@ -54,6 +72,13 @@ export const App = () => {
       <div>
         <p>{loading ? 'Generando respuesta 🚀' : response}</p>
       </div>
+      {state.messages.map((msg, index) => (
+        <p key={index}>
+          <strong> {msg.from === 'user' ? 'Tú' : 'Bot'}: </strong>
+          {msg.text}
+        </p>
+
+      ))}
     </>
   )
 }
