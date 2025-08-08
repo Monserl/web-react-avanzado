@@ -38,21 +38,6 @@ export const App = () => {
   const handlePregunta = async (data) => {
     console.log(data)
     setLoading(true)
-    try {
-      const res = await axios.post('http://localhost:11434/api/generate', {
-        model: 'deepseek-r1:1.5b',
-        prompt: data.userInput,
-        stream: false
-      })
-      setResponse(res.data.response)
-      // Dispatch para guardar el mensaje del ususario
-      dispatch({ type: 'ADD_MESSAGE', payload: { from: 'user', text: data.userInput } })
-      dispatch({ type: 'ADD_MESSAGE', payload: { from: 'bot', text: res.data.response } })
-    } catch (error) {
-      console.error('error: ', error)
-    } finally {
-      setLoading(false)
-    }
   }
 
   return (
