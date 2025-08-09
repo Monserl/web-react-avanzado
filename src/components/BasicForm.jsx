@@ -15,6 +15,7 @@ const schema = yup.object({
     .oneOf([yup.ref('password')], 'Las contraseñas no coinciden')
     .required('Confirma tu contraseña')
 })
+
 export const BasicForm = () => {
   const {
     register,

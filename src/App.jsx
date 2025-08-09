@@ -3,6 +3,8 @@ import './index.css'
 
 export const App = () => {
   return (
-    <ChatBot />
+    <ChatProvider>
+      <ChatBot />
+    </ChatProvider>
   )
 }
