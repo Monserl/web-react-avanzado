@@ -26,7 +26,8 @@ app.get('/api/peliculas/accion/titulo/:titulo/:year', (req, res) => {
   const resultados = infoPeliculas.accion.filter(pelicula => pelicula.titulo === titulo && pelicula.year === Number(year))
 
   if (resultados.length === 0) {
-    return res.status(400).send(`No se encontraron resultados para ${titulo} en el año ${year}`)
+    return res.status(400).send(`No se encontraron resultados 
+    para ${titulo} en el año ${year}`)
   }
 
   res.send(resultados)
